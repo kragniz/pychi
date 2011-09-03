@@ -3,7 +3,7 @@ from optparse import OptionParser
 import libpychi, sys
 parser = OptionParser(description=libpychi.data.DESCRIPTION, version=libpychi.data.VERSION)
 
-parser.add_option("-t",
+parser.add_option("-t", '--timeout',
                   type="int",
                   dest="timeout",
                   help='set the timeout of each request (has little effect)')
@@ -14,12 +14,24 @@ parser.add_option('-v', '--verbose',
                   dest='verbose',
                   help='print some (hardly) interesting messages')
                   
+parser.add_option('-n', '--nice',
+                  action='store_true',
+                  default=False,
+                  dest='nice',
+                  help='output nice messages, not these nasty short ones')
+                  
 (options, args) = parser.parse_args()
  
 net = libpychi.Internet(timeout=options.timeout, verbose=options.verbose)
 if net.connected():
-    print('We are connected to the internet!')
+    if options.nice:
+        print 'We are connected to the internet!'
+    else:
+        print 'internet connected'
     sys.exit(0)
 else:
-    print('Oh noes! No interwebs!')
+    if options.nice:
+        print 'Oh noes! No interwebs!'
+    else:
+        print 'internet disconnected'
     sys.exit(1)
