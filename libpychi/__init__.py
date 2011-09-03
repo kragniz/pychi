@@ -3,7 +3,7 @@ import data
 from checkUrl import Booleans, CheckUrl
 
 class Internet(object):
-    def __init__(self, customHosts=None, timeout=1):
+    def __init__(self, customHosts=None, timeout=1, verbose=False):
         self.commonHosts = ('http://www.google.com',
                             'http://www.gnome.org',
                             'http://www.debian.org',
@@ -14,13 +14,14 @@ class Internet(object):
             
         self.results = Booleans()
         self.timeout = timeout
+        self.verbose = verbose
         
     def connected(self):
         if self.results:
             self.results.clear()
             
         for url in self.commonHosts:
-            CheckUrl(url, self.results, timeout=self.timeout).start()
+            CheckUrl(url, self.results, timeout=self.timeout, verbose=self.verbose).start()
             
         while len(self.results) != len(self.commonHosts):
             time.sleep(0.01)

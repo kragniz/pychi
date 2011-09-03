@@ -3,11 +3,20 @@ from optparse import OptionParser
 import libpychi, sys
 parser = OptionParser(description=libpychi.data.DESCRIPTION, version=libpychi.data.VERSION)
 
-parser.add_option("-t", type="int", dest="timeout", help='set the timeout of each request (has little effect)')
+parser.add_option("-t",
+                  type="int",
+                  dest="timeout",
+                  help='set the timeout of each request (has little effect)')
+                  
+parser.add_option('-v', '--verbose',
+                  action='store_true',
+                  default=False,
+                  dest='verbose',
+                  help='print some (hardly) interesting messages')
                   
 (options, args) = parser.parse_args()
  
-net = libpychi.Internet(timeout=options.timeout)
+net = libpychi.Internet(timeout=options.timeout, verbose=options.verbose)
 if net.connected():
     print('We are connected to the internet!')
     sys.exit(0)

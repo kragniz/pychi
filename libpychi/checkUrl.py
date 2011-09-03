@@ -27,19 +27,22 @@ class Booleans(object):
         
         
 class CheckUrl(threading.Thread):
-    def __init__(self, url, results, timeout=1):
+    def __init__(self, url, results, timeout=1, verbose=False):
         threading.Thread.__init__(self, name='CheckUrl')
         self.results = results
         self.url = url
         self.timeout = timeout
+        self.verbose = verbose
         
     def _checkUrl(self, url):
         try:
             urllib2.urlopen(url, None, timeout)
-            print 'got', url
+            if self.verbose:
+                print 'got', url
             return True
         except:
-            print 'failed', url
+            if self.verbose:
+                print 'failed', url
             return False
         
     def run(self):
