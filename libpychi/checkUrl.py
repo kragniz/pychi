@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import urllib2, threading, time
+import urllib2, threading
     
 class Booleans(object):
     def __init__(self):
@@ -34,9 +34,11 @@ class CheckUrl(threading.Thread):
         
     def _checkUrl(self, url):
         try:
-            urllib2.urlopen(url, None, 2)
+            urllib2.urlopen(url, None, 1)
+            print 'got', url
             return True
-        except Exception:
+        except:
+            print 'failed', url
             return False
         
     def run(self):

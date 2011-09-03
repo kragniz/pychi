@@ -1,4 +1,5 @@
-import internet
+import time
+from checkUrl import Booleans, CheckUrl
 
 class Internet(object):
     def __init__(self, customHosts=None):
@@ -10,14 +11,14 @@ class Internet(object):
         if customHosts:
             self.commonHosts = customHosts
             
-        self.results = internet.Booleans()
+        self.results = Booleans()
         
     def connected(self):
         if self.results:
             self.results.clear()
             
         for url in self.commonHosts:
-            internet.CheckUrl(url, self.results).start()
+            CheckUrl(url, self.results).start()
             
         while len(self.results) != len(self.commonHosts):
             time.sleep(0.01)
