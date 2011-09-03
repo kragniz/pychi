@@ -1,1 +1,16 @@
 #!/usr/bin/env python
+from optparse import OptionParser
+import libpychi, sys
+parser = OptionParser(description=libpychi.data.DESCRIPTION, version=libpychi.data.VERSION)
+
+parser.add_option("-t", type="int", dest="timeout", help='set the timeout of each request (has little effect)')
+                  
+(options, args) = parser.parse_args()
+ 
+net = libpychi.Internet(timeout=options.timeout)
+if net.connected():
+    print('We are connected to the internet!')
+    sys.exit(0)
+else:
+    print('Oh noes! No interwebs!')
+    sys.exit(1)

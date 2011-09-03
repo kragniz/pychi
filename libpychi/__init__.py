@@ -1,8 +1,9 @@
 import time
+import data
 from checkUrl import Booleans, CheckUrl
 
 class Internet(object):
-    def __init__(self, customHosts=None):
+    def __init__(self, customHosts=None, timeout=1):
         self.commonHosts = ('http://www.google.com',
                             'http://www.gnome.org',
                             'http://www.debian.org',
@@ -12,13 +13,14 @@ class Internet(object):
             self.commonHosts = customHosts
             
         self.results = Booleans()
+        self.timeout = timeout
         
     def connected(self):
         if self.results:
             self.results.clear()
             
         for url in self.commonHosts:
-            CheckUrl(url, self.results).start()
+            CheckUrl(url, self.results, timeout=self.timeout).start()
             
         while len(self.results) != len(self.commonHosts):
             time.sleep(0.01)
