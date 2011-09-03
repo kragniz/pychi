@@ -1,15 +1,19 @@
+#!/usr/bin/env python
 import urllib2, threading, time
 class Internet(object):
-    def __init__(self):
+    def __init__(self, customHosts=None):
         self.commonHosts = ('http://www.google.com',
                             'http://www.gnome.org',
-                            'http://www.desdfsdfbian.org',
+                            'http://www.debian.org',
+                            'http://www.xkcd.com'
                             )
+        if customHosts:
+            self.commonHosts = customHosts
+            
         self.results = Booleans()
         
     def connected(self):
         if self.results:
-            print 'hello'
             self.results.clear()
             
         for url in self.commonHosts:
@@ -39,9 +43,10 @@ class Booleans(object):
     
     def true(self):
         '''Return True if at least one value is True'''
-        true = True
+        true = False
         for b in self._booleans:
-            true = (true or b)
+            if b:
+                true = b
         return true
         
         
@@ -53,15 +58,17 @@ class CheckUrl(threading.Thread):
         
     def _checkUrl(self, url):
         try:
-            urllib2.urlopen(url)
+            urllib2.urlopen(url, None, 2)
             return True
-        except:
+        except Exception:
             return False
         
     def run(self):
         self.results.addValue(self._checkUrl(self.url))
             
+            
 if __name__ == '__main__':
+    '''self tests'''
     net = Internet()
     if net.connected():
         print('We are connected to the internet!')
