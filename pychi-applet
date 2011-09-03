@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import gtk, gobject
+import gtk, gobject, os, sys
 import libpychi
 
 class PychiApplet(object):
@@ -7,14 +7,24 @@ class PychiApplet(object):
         self.statusIcon = gtk.StatusIcon()
         self.statusIcon.connect("activate", self.onClick)
         
+        if not os.path.isdir(libpychi.data.ICON_DIR):
+            self.ICON_DIR = 'icons/'
+        else:
+            self.ICON_DIR = libpychi.data.ICON_DIR
+        self.CONNECTED_ICON = self.ICON_DIR + libpychi.data.CONNECTED_ICON
+        self.DISCONNECTED_ICON = self.ICON_DIR + libpychi.data.DISCONNECTED_ICON
+            
         self.net = libpychi.Internet()
         if self.net.connected():
-            self.statusIcon.set_from_file(libpychi.data.CONNECTED_ICON)
+            self.statusIcon.set_from_file(self.CONNECTED_ICON)
         else:
-            self.statusIcon.set_from_file(libpychi.data.DISCONNECTED_ICON)
+            self.statusIcon.set_from_file(self.DISCONNECTED_ICON)
         
     def onClick(self, event):
         print 'clicked'
         
 pychiApplet = PychiApplet()
-gtk.main()
+try:
+    gtk.main()
+except KeyboardInterrupt:
+    sys.exit()
