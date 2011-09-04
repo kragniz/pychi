@@ -33,7 +33,7 @@ class PychiApplet(object):
     def onClick(self, event):
         self.check()
         
-    def check(self):
+    def check(self, event=None):
         if self.net.connected():
             self.iconConnected()
         else:
@@ -53,7 +53,7 @@ class PychiApplet(object):
     def onAbout(self, widget):
         about = gtk.AboutDialog()
         about.set_program_name(libpychi.data.NAME)
-        about.set_version(libpychi.data.VERSION) #use the version variable initilized above
+        about.set_version(libpychi.data.VERSION)
         about.set_copyright(libpychi.data.COPYRIGHT)
         about.set_comments(libpychi.data.DESCRIPTION)
         #about.set_website('nothing yet')

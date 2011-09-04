@@ -36,13 +36,13 @@ class CheckUrl(threading.Thread):
         
     def _checkUrl(self, url):
         try:
-            urllib2.urlopen(url, None, timeout)
+            urllib2.urlopen(url, None, self.timeout)
             if self.verbose:
                 print 'got', url
             return True
-        except:
+        except Exception, e:
             if self.verbose:
-                print 'failed', url
+                print 'failed', url, 'because', e
             return False
         
     def run(self):
