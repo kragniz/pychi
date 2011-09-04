@@ -6,6 +6,19 @@ class PychiApplet(object):
     def __init__(self):
         self.statusIcon = gtk.StatusIcon()
         self.statusIcon.connect("activate", self.onClick)
+        self.statusIcon.connect('popup-menu', self.showMenu)
+        
+        self.menu = gtk.Menu()
+
+        aboutMenu = gtk.ImageMenuItem(gtk.STOCK_ABOUT, 'About')
+        self.menu.append(aboutMenu)
+        aboutMenu.show()
+        aboutMenu.connect('activate', self.onAbout)
+        
+        quitMenu = gtk.ImageMenuItem(gtk.STOCK_QUIT, 'Quit')
+        self.menu.append(quitMenu)
+        quitMenu.show()
+        quitMenu.connect('activate', self.onQuit)
         
         if not os.path.isdir(libpychi.data.ICON_DIR):
             self.ICON_DIR = 'icons/'
@@ -15,13 +28,44 @@ class PychiApplet(object):
         self.DISCONNECTED_ICON = self.ICON_DIR + libpychi.data.DISCONNECTED_ICON
             
         self.net = libpychi.Internet()
-        if self.net.connected():
-            self.statusIcon.set_from_file(self.CONNECTED_ICON)
-        else:
-            self.statusIcon.set_from_file(self.DISCONNECTED_ICON)
+        self.check()
         
     def onClick(self, event):
-        print 'clicked'
+        self.check()
+        
+    def check(self):
+        if self.net.connected():
+            self.iconConnected()
+        else:
+            self.iconDisconnected()
+            
+    def iconConnected(self):
+        self.statusIcon.set_from_file(self.CONNECTED_ICON)
+        self.statusIcon.set_tooltip_text('internet connected')
+        
+    def iconDisconnected(self):
+        self.statusIcon.set_from_file(self.DISCONNECTED_ICON)
+        self.statusIcon.set_tooltip_text('internet disconnected')
+        
+    def showMenu(self, widget, button, timeout):
+        self.menu.popup(None, None, gtk.status_icon_position_menu, button, timeout, data=self.statusIcon)
+        
+    def onAbout(self, widget):
+        about = gtk.AboutDialog()
+        about.set_program_name(libpychi.data.NAME)
+        about.set_version(libpychi.data.VERSION) #use the version variable initilized above
+        about.set_copyright(libpychi.data.COPYRIGHT)
+        about.set_comments(libpychi.data.DESCRIPTION)
+        #about.set_website('nothing yet')
+        about.set_logo(gtk.gdk.pixbuf_new_from_file(self.CONNECTED_ICON))
+        about.set_authors(libpychi.data.AUTHORS)
+        about.set_wrap_license(True)
+        about.set_license(libpychi.data.LICENCE)
+        about.run()
+        about.destroy()
+        
+    def onQuit(self, event):
+        sys.exit(0)
         
 pychiApplet = PychiApplet()
 try:
