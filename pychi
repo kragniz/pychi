@@ -27,18 +27,28 @@ parser.add_option('-e', '--exit',
                     dest='exit',
                     help='return an exit code of 0, even if the internet is disconnected')
                   
+parser.add_option('-s', '--short',
+                     action='store_true',
+                     default=False,
+                     dest='short',
+                     help='print short (one word) messages about the status of the connection')
+
 (options, args) = parser.parse_args()
  
 net = libpychi.Internet(timeout=options.timeout, verbose=options.verbose)
 if net.connected():
     if options.nice:
         print 'We are connected to the internet!'
+    elif options.short:
+        print 'connected'
     else:
         print 'internet connected'
     sys.exit(0)
 else:
     if options.nice:
         print 'Oh noes! No interwebs!'
+    elif options.short:
+        print 'disconnected'
     else:
         print 'internet disconnected'
     if options.exit:
