@@ -5,6 +5,7 @@ parser = OptionParser(description=libpychi.data.DESCRIPTION, version=libpychi.da
 
 parser.add_option("-t", '--timeout',
                   type="int",
+                  default=3,
                   dest="timeout",
                   help='set the timeout of each request (has little effect)')
                   
@@ -19,6 +20,12 @@ parser.add_option('-n', '--nice',
                   default=False,
                   dest='nice',
                   help='output nice messages, not these nasty short ones')
+
+parser.add_option('-e', '--exit',
+                    action='store_true',
+                    default=False,
+                    dest='exit',
+                    help='return an exit code of 0, even if the internet is disconnected')
                   
 (options, args) = parser.parse_args()
  
@@ -34,4 +41,7 @@ else:
         print 'Oh noes! No interwebs!'
     else:
         print 'internet disconnected'
-    sys.exit(1)
+    if options.exit:
+        sys.exit(0)
+    else:
+        sys.exit(1)
